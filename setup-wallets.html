@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">          
+    <title>Setup NGO Wallets</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #1a1a1a;
+            color: white;
+        }
+        .container {
+            background: #2a2a2a;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        button {
+            background: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #45a049;
+        }
+        .wallet-list {
+            background: #333;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        .wallet-item {
+            padding: 5px 0;
+            border-bottom: 1px solid #555;
+        }
+        .success {
+            color: #4CAF50;
+        }
+        .error {
+            color: #f44336;
+        }
+    </style>
+</head>
+<body>
+    <h1>NGO Wallet Setup</h1>
+    
+    <div class="container">
+        <h2>Pre-approved NGO Wallets</h2>
+        <p>These are the hardcoded NGO wallets that can register as admin:</p>
+        
+        <div class="wallet-list">
+            <h3 style="color: #4CAF50; margin-bottom: 10px;">Admin Wallet (Account 0)</h3>
+            <div class="wallet-item">
+                <strong>0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266</strong><br>
+                <span style="color: #888;">Green Earth Foundation (Admin)</span>
+            </div>
+            
+            <h3 style="color: #2196F3; margin: 20px 0 10px 0;">NGO Wallets (Accounts 1-2)</h3>
+            <div class="wallet-item">
+                <strong>0x70997970C51812dc3A010C7d01b50e0d17dc79C8</strong><br>
+                <span style="color: #888;">Climate Action Network</span>
+            </div>
+            <div class="wallet-item">
+                <strong>0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC</strong><br>
+                <span style="color: #888;">Environmental Protection Society</span>
+            </div>
+            
+            <h3 style="color: #FF9800; margin: 20px 0 10px 0;">Company Wallets (Accounts 1-3)</h3>
+            <div class="wallet-item">
+                <strong>0x70997970C51812dc3A010C7d01b50e0d17dc79C8</strong><br>
+                <span style="color: #888;">EcoTech Solutions</span>
+            </div>
+            <div class="wallet-item">
+                <strong>0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC</strong><br>
+                <span style="color: #888;">Green Future Corp</span>
+            </div>
+            <div class="wallet-item">
+                <strong>0x90F79bf6EB2c4f870365E785982E1f101E9b2c2</strong><br>
+                <span style="color: #888;">Sustainable Ventures</span>
+            </div>
+        </div>
+        
+        <button onclick="setupWallets()">Setup NGO Wallets</button>
+        <button onclick="clearWallets()">Clear All Wallets</button>
+        <button onclick="viewWallets()">View Current Wallets</button>
+    </div>
+    
+    <div class="container">
+        <h2>Status</h2>
+        <div id="status"></div>
+    </div>
+    
+    <div class="container">
+        <h2>Current Wallets</h2>
+        <div id="wallets"></div>
+    </div>
+
+    <script>
+        // Pre-approved NGO wallets
+        const approvedNgoWallets = [
+            {
+                address: '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266',
+                ngoName: 'Green Earth Foundation (Admin)'
+            },
+            {
+                address: '0x70997970C51812dc3A010C7d01b50e0d17dc79C8',
+                ngoName: 'Climate Action Network'
+            },
+            {
+                address: '0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC',
+                ngoName: 'Environmental Protection Society'
+            }
+        ];
+
+        // Company wallets
+        const companyWallets = [
+            {
+                address: '0x70997970C51812dc3A010C7d01b50e0d17dc79C8',
+                companyName: 'EcoTech Solutions'
+            },
+            {
+                address: '0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC',
+                companyName: 'Green Future Corp'
+            },
+            {
+                address: '0x90F79bf6EB2c4f870365E785982E1f101E9b2c2',
+                companyName: 'Sustainable Ventures'
+            }
+        ];
+
+        function setupWallets() {
+            try {
+                // Clear existing wallets
+                localStorage.setItem('approved_ngo_wallets', '[]');
+                localStorage.setItem('registered_companies', '[]');
+                
+                // Add NGO wallets
+                const ngoWallets = [];
+                approvedNgoWallets.forEach(wallet => {
+                    const newWallet = {
+                        address: wallet.address.toLowerCase(),
+                        ngoName: wallet.ngoName,
+                        addedAt: new Date().toISOString(),
+                        isActive: true
+                    };
+                    ngoWallets.push(newWallet);
+                });
+                localStorage.setItem('approved_ngo_wallets', JSON.stringify(ngoWallets));
+                
+                // Add company wallets
+                const companies = [];
+                companyWallets.forEach(wallet => {
+                    const newCompany = {
+                        address: wallet.address.toLowerCase(),
+                        companyName: wallet.companyName,
+                        registeredAt: new Date().toISOString(),
+                        isActive: true
+                    };
+                    companies.push(newCompany);
+                });
+                localStorage.setItem('registered_companies', JSON.stringify(companies));
+                
+                document.getElementById('status').innerHTML = 
+                    '<div class="success">✅ All wallets setup completed successfully!</div>';
+                
+                viewWallets();
+            } catch (error) {
+                document.getElementById('status').innerHTML = 
+                    '<div class="error">❌ Setup failed: ' + error.message + '</div>';
+            }
+        }
+
+        function clearWallets() {
+            localStorage.setItem('approved_ngo_wallets', '[]');
+            localStorage.setItem('registered_companies', '[]');
+            document.getElementById('status').innerHTML = 
+                '<div class="success">✅ All wallets cleared!</div>';
+            viewWallets();
+        }
+
+        function viewWallets() {
+            const ngoWallets = JSON.parse(localStorage.getItem('approved_ngo_wallets') || '[]');
+            const companyWallets = JSON.parse(localStorage.getItem('registered_companies') || '[]');
+            
+            if (ngoWallets.length === 0 && companyWallets.length === 0) {
+                document.getElementById('wallets').innerHTML = 
+                    '<div style="color: #888;">No wallets registered</div>';
+                return;
+            }
+            
+            let html = '<div class="wallet-list">';
+            
+            if (ngoWallets.length > 0) {
+                html += '<h3 style="color: #2196F3; margin-bottom: 10px;">NGO Wallets</h3>';
+                ngoWallets.forEach(wallet => {
+                    html += `
+                        <div class="wallet-item">
+                            <strong>${wallet.address}</strong><br>
+                            <span style="color: #888;">${wallet.ngoName}</span><br>
+                            <span style="color: #666; font-size: 12px;">Added: ${new Date(wallet.addedAt).toLocaleString()}</span>
+                        </div>
+                    `;
+                });
+            }
+            
+            if (companyWallets.length > 0) {
+                html += '<h3 style="color: #FF9800; margin: 20px 0 10px 0;">Company Wallets</h3>';
+                companyWallets.forEach(wallet => {
+                    html += `
+                        <div class="wallet-item">
+                            <strong>${wallet.address}</strong><br>
+                            <span style="color: #888;">${wallet.companyName}</span><br>
+                            <span style="color: #666; font-size: 12px;">Registered: ${new Date(wallet.registeredAt).toLocaleString()}</span>
+                        </div>
+                    `;
+                });
+            }
+            
+            html += '</div>';
+            document.getElementById('wallets').innerHTML = html;
+        }
+
+        // Load wallets on page load
+        viewWallets();
+    </script>
+</body>
+</html>
